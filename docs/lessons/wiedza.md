@@ -1,10 +1,10 @@
 # Notatki z kursu — od czego zaczynamy
 
-Luźny styl, ale treść ma być ściągą: definicje, „dlaczego tak”, typowe pułapki. Bez mapowania „co w którym pliku” — sama wiedza.
+Luźny styl, ale treść ma być ściągą: definicje, „dlaczego tak”, typowe pułapki. Sama wiedza — bez mapowania na konkretne pliki projektu.
 
 ## Po co ćwiczymy ML w Pythonie
 
-Uczymy się łączyć matematykę klasyfikacji z kodem: dane jako wektory cech, model jako prosta funkcja decyzyjna, trening jako powtarzalna aktualizacja parametrów. Pierwszy krok to często **perceptron** — najprostszy klasyfikator liniowy, który dobrze tłumaczy ideę **granicy decyzji** i **uczenia online** (aktualizacja po jednej próbce).
+Uczymy się łączyć matematykę klasyfikacji z kodem: dane jako wektory cech, model jako prosta funkcja decyzyjna, trening jako powtarzalna aktualizacja parametrów. Pierwszy krok to często **perceptron** — najprostszy klasyfikator liniowy, który dobrze tłumaczy ideę **granicy decyzji** i **uczenia online** (aktualizacja po jednej próbce). W praktyce ten sam schemat „wejście liniowe → decyzja” powtarza się w większych modelach: pojedynczy perceptron to jak jeden neuron liniowy z progiem; sieci składają się z wielu takich bloków (zwykle z **nieliniowością** między warstwami), a współczesne modele sekwencyjne też na tym się opierają — tylko w skali i z inną architekturą.
 
 ## Środowisko i narzędzia
 
@@ -12,7 +12,19 @@ Uczymy się łączyć matematykę klasyfikacji z kodem: dane jako wektory cech, 
 
 **Plik zależności** to zamrożona lista nazw pakietów i często minimalnych wersji. Zamiast pamiętać „zainstaluj to i tamto”, robisz jedną komendę instalacji z listy — standard w małych i większych projektach.
 
-**Ignorowanie katalogu środowiska w kontroli wersji** ma sens, bo w środku są tysiące plików binarnych i środowiskowych; repozytorium trzyma **przepis** (lista paczek), a nie **gotową kopię** zainstalowanego świata. Klonujesz repo, odtwarzasz venv u siebie — lekko i czytelnie.
+**Ignorowanie katalogu środowiska w kontroli wersji** ma sens, bo w środku są tysiące plików binarnych i środowiskowych; repozytorium trzyma **przepis** (lista paczek), a nie **gotową kopię** zainstalowanego świata. Klonujesz projekt, odtwarzasz wirtualne środowisko u siebie — lekko i czytelnie.
+
+**Analiza statyczna w edytorze** (podkreślenia importów) patrzy na **ten interpreter Pythona**, który jest wybrany w IDE. Jeśli paczki są zainstalowane tylko w wirtualnym środowisku, a edytor wskazuje na inny Python, zobaczysz fałszywe alarmy — rozwiązanie to ten sam interpreter, w którym faktycznie instalujesz zależności.
+
+## Dane tabelaryczne i wczytywanie
+
+**Zbiór iris** ma kilkadziesiąt próbek na klasę, cztery cechy numeryczne i etykietę gatunku. Na początku często bierze się **dwie klasy** i **dwie cechy**, żeby wizualizacja była w 2D.
+
+**Wczytanie z dysku zamiast z adresu URL** ma sens przy ćwiczeniu: odczyt przez bibliotekę z sieci wymaga działającego DNS i połączenia; błąd typu „nie udało się rozwiązać nazwy hosta” oznacza problem sieciowy, nie matematyczny modelu.
+
+**Mapowanie etykiet tekstowych na liczby** dla dwóch klas: jedna klasa jako wartość ujemna, druga jako dodatnia (np. `-1` i `1`) — zgodnie z regułą uczenia perceptronu.
+
+**Wybór podzbioru wierszy i kolumn** w ramce danych: pierwsze N wierszy na trening binarny, konkretne kolumny jako współrzędne punktu w przestrzeni cech (np. długość działki kielicha i długość płatka).
 
 ## NumPy w roli „silnika” pod model
 
@@ -24,7 +36,19 @@ Uczymy się łączyć matematykę klasyfikacji z kodem: dane jako wektory cech, 
 
 **Kombinacja liniowa** cech i wag plus bias to dokładnie to, co liczy się przed progiem: suma ważonych wejść i przesunięcie. To serce warstwy liniowej w wielu modelach.
 
-**Prog warunkowy na całych tablicach** pozwala w jednym kroku przypisać klasę tam, gdzie wartość przed progiem jest nienegatywna, i drugą klasę w przeciwnym razie — wygodne przy wektorze predykcji.
+**Prog warunkowy na całych tablicach** (`wartość jeśli warunek, w przeciwnym razie inna`) pozwala w jednym kroku przypisać klasę tam, gdzie wartość przed progiem jest nienegatywna, i drugą klasę w przeciwnym razie — wygodne przy wektorze predykcji i przy **kodowaniu etykiet** z nazw klas.
+
+**Siatka punktów w 2D** do rysowania granicy: dwie osie zakresów, **iloczyn kartezjański** zakresów przez funkcję generującą siatkę, spłaszczenie do listy punktów, predykcja klasyfikatora dla każdego punktu, **przekształcenie z powrotem** do kształtu siatki — pod **wypełnione kontury** kolorami klas.
+
+## Matplotlib — wizualizacja w ćwiczeniu
+
+**Wykres rozrzutu** dwóch cech: osobne serie dla klas (kolor, marker), oś X i Y z opisem fizycznym cechy.
+
+**Wykres błędu w czasie treningu** oś pozioma to numer epoki (od jedynki), pionowa to liczba **niezerowych korekt** w epoce — sygnał, czy model jeszcze się poprawia.
+
+**Regiony decyzji:** tło jako wypełnione kontury z lekką przezroczystością, na wierzchu te same próbki co wcześniej; **mapa kolorów** ograniczona do tylu kolorów, ile jest **unikalnych etykiet** po treningu.
+
+**Backend bez interakcji** (np. rasteryzacja do pliku): wywołanie pokazujące okno może dać ostrzeżenie lub nic nie pokazać — to kwestia środowiska uruchomienia, nie samego modelu.
 
 ## Perceptron — mechanika
 
@@ -42,18 +66,12 @@ Uczymy się łączyć matematykę klasyfikacji z kodem: dane jako wektory cech, 
 
 ## Pułapki i dobre nawyki
 
-**Separowalność liniowa:** klasyczny perceptron ma gwarancie sensowne tylko wtedy, gdy klasy da się oddzielić płaszczyzną. Przy nakładających się chmurach punktów błąd treningowy może oscylować — wtedy inne modele lub cechy są konieczne.
+**Separowalność liniowa:** klasyczny perceptron ma gwarancje sensowne tylko wtedy, gdy klasy da się oddzielić płaszczyzną. Przy nakładających się chmurach punktów błąd treningowy może oscylować — wtedy inne modele lub cechy są konieczne.
 
 **Współczynnik uczenia:** za duży — oscylacje i niestabilność; za mały — powolny postęp. W praktyce zwykle eksperymentalnie lub z rozszerzeniami (np. później: regularyzacja, inne reguły optymalizacji).
 
 **Powtarzalność:** ustalone ziarno losowe i ta sama kolejność epok dają powtarzalny przebieg na tym samym kodzie i danych — ułatwia porównanie dwóch wersji algorytmu.
 
-**Izolacja środowiska + lista paczek** to minimum higieny: nie mieszasz bibliotek z pięciu projektów w jednym globalnym Pythonie i nie wrzucasz gigabajtów `site-packages` do Gita.
+**Spójność środowiska:** jeden Python do instalacji paczek i do uruchamiania skryptów; ten sam interpreter w IDE co w terminalu — mniej chaosu z importami i wersjami.
 
-W `src/p52/iris.data` leży lokalna kopia zbioru iris z UCI — `main.py` czyta ten plik z dysku. Dzięki temu unikasz błędu sieci/DNS przy `pd.read_csv` z adresu URL (np. `URLError: getaddrinfo failed`, czyli brak rozwiązania nazwy hosta albo brak połączenia).
-
-Wykresy w tej lekcji idą przez **matplotlib** (jest w `requirements.txt`). Żeby edytor nie podkreślał importów na czerwono, trzymaj aktywne **venv** z zainstalowanymi paczkami i wybierz ten interpreter w IDE (w repo jest podpowiedź w `.vscode/settings.json` i `pyrightconfig.json`).
-
----
-
-*Ściąga spięta z tym, co realnie ćwiczysz w repozytorium: perceptron z NumPy, venv, zależności pip, sensowne ignorowanie środowiska w Git.*
+**Dane lokalne vs sieć:** ćwicząc wczytywanie tabeli, trzymaj kopię pliku u siebie, jeśli chcesz uniknąć zależności od połączenia i DNS w momencie nauki.
