@@ -2,6 +2,10 @@
 
 Luźny styl, ale treść ma być ściągą: definicje, „dlaczego tak”, typowe pułapki. Sama wiedza — bez mapowania na konkretne pliki projektu.
 
+## Zakres (materiał do ok. str. 70)
+
+Notatki i powiązane quizy z tego repozytorium obejmują **początek ścieżki** z kursu / polskiego wydania podręcznika: od motywacji i rodzajów uczenia, przez środowisko i ekosystem bibliotek, wczytywanie danych i konwencje NumPy, wizualizację próbek i regionów decyzji, po **perceptron** (reguła uczenia, epoki, ograniczenia separowalności) oraz **zapowiedź Adaline** jako przejścia od reguły dyskretnej do minimalizacji ciągłego kosztu. Dalsze rozdziały (np. pełna implementacja gradientu wsadowego dla Adaline z wieloma epokami, regresja logistyczna jako osobny rozdział, SVM) leżą **poza** tym zakresem stronicowym — tu są co najwyżej krótkie odniesienia „co dalej”.
+
 ## Po co ćwiczymy ML w Pythonie
 
 Uczymy się łączyć matematykę klasyfikacji z kodem: dane jako wektory cech, model jako prosta funkcja decyzyjna, trening jako powtarzalna aktualizacja parametrów. Pierwszy krok to często **perceptron** — najprostszy klasyfikator liniowy, który dobrze tłumaczy ideę **granicy decyzji** i **uczenia online** (aktualizacja po jednej próbce). W praktyce ten sam schemat „wejście liniowe → decyzja” powtarza się w większych modelach: pojedynczy perceptron to jak jeden neuron liniowy z progiem; sieci składają się z wielu takich bloków (zwykle z **nieliniowością** między warstwami), a współczesne modele sekwencyjne też na tym się opierają — tylko w skali i z inną architekturą.
