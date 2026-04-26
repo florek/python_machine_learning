@@ -1,3 +1,6 @@
 venv/
 /python-machine-learning-i-deep-learning.html
+__pycache__/
+*.py[cod]
+*$py.class
 

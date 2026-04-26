@@ -2,6 +2,7 @@
 
 | Data | Wynik | % | Braki | Link |
 |------|-------|---|-------|------|
+| 26.04.2026 | 16/20 | 80% | 2, 10, 17, 19 (niedozwolona litera X) | [wynik](26.04.2026_results.md) |
 | 24.04.2026 | 15/20 | 75% | 5, 12, 15, 17 (X); pyt. 18: błędna litera | [wynik](24.04.2026_results.md) |
 | 21.04.2026 | 14/20 | 70% | 2, 7, 11, 12, 15, 17 (niedozwolona litera X) | [wynik](21.04.2026_results.md) |
 | 20.04.2026 | 18/20 | 90% | 1, 18 (niedozwolona litera X) | [wynik](20.04.2026_results.md) |
@@ -12,19 +13,21 @@
 
 - **Najlepszy wynik:** 19/20 (95%) — 15.04.2026
 - **Najgorszy wynik:** 14/20 (70%) — 21.04.2026
-- **Średnia ze wszystkich prób:** 16,8/20 (84%)
-- **Ostatnie 5 wyników:** 15/20 (24.04.2026), 14/20 (21.04.2026), 18/20 (20.04.2026), 18/20 (19.04.2026), 19/20 (15.04.2026)
+- **Średnia ze wszystkich prób:** 16,7/20 (83,33%)
+- **Ostatnie 5 wyników:** 16/20 (26.04.2026), 15/20 (24.04.2026), 14/20 (21.04.2026), 18/20 (20.04.2026), 18/20 (19.04.2026)
 
 ## Najczęstsze obszary do poprawy
 
-Na podstawie wszystkich plików `*_results.md` (łącznie 5 prób), zliczanie tagów w sekcjach szczegółów błędów:
+Na podstawie wszystkich plików `*_results.md` (łącznie 6 prób), zliczanie tagów w sekcjach szczegółów błędów:
 
 | Kategoria (tag) | Liczba wystąpień błędów |
 |-----------------|------------------------|
-| [ML] | 16 |
+| [ML] | 18 |
+| [Adaline] | 1 |
+| [NumPy] | 1 |
 | [scikit-learn] | 1 |
 
-Najmocniejsze wzorce: wpisy `X` zamiast A–D (nadal liczone jak brak), pomyłki na granicy **nadzór / nienadzór / RL** oraz niedoprecyzowana odpowiedź przy pytaniach o **stratę vs koszt** i o **krok SGD (średni koszt, iloczyn cech i błędu)**. Kategoria [scikit-learn] pojawia się przy pytaniach o API `load_iris` i `return_X_y`.
+Najmocniejsze wzorce: wpisy `X` zamiast A–D (nadal liczone jak brak), pomyłki na granicy **nadzór / nienadzór / RL** oraz niedoprecyzowana odpowiedź przy pytaniach o **stratę vs koszt** i o **krok SGD (średni koszt, iloczyn cech i błędu)**. Nowe błędy wniosły też pojedyncze punkty z [Adaline] (różnica batch vs SGD) i [NumPy] (stabilność numeryczna sigmoidy).
 
 ## Notatki
 
