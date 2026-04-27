@@ -4,9 +4,9 @@ Repo pod naukę — ML, ćwiczenia z kodem, porządek w projekcie. Spokojnie, kr
 
 ## Dokumentacja
 
-[W notatkach](docs/lessons/wiedza.md) jest aktualna ściąga z kursu do zakresu strony 89: perceptron, Adaline (batch i SGD), standaryzacja, granice decyzji, sigmoida i podstawy regresji logistycznej.
+[W notatkach](docs/lessons/wiedza.md) jest aktualna ściąga z kursu do zakresu strony 94: m.in. perceptron, Adaline (batch i SGD), standaryzacja, granice decyzji, sigmoida, log-loss, regresję logistyczną z batch GD, dane przez API scikit-learn oraz etykiety 0/1 w zadaniu binarnym.
 
-Quiz (aktualna seria): [pytania](docs/quiz/questions/26.04.2026_questions.md), [moje odpowiedzi (szablon)](docs/quiz/my_answers/26.04.2026_my_answers.md), [klucz](docs/quiz/answers/26.04.2026_answers.md).
+Quiz (aktualna seria): [pytania](docs/quiz/questions/27.04.2026_questions.md), [moje odpowiedzi (szablon)](docs/quiz/my_answers/27.04.2026_my_answers.md), [klucz](docs/quiz/answers/27.04.2026_answers.md).
 
 Wcześniejsze serie: [21.04.2026](docs/quiz/questions/21.04.2026_questions.md) ([szablon](docs/quiz/my_answers/21.04.2026_my_answers.md), [klucz](docs/quiz/answers/21.04.2026_answers.md)); [20.04.2026](docs/quiz/questions/20.04.2026_questions.md) ([szablon](docs/quiz/my_answers/20.04.2026_my_answers.md), [klucz](docs/quiz/answers/20.04.2026_answers.md)); [19.04.2026](docs/quiz/questions/19.04.2026_questions.md); [15.04.2026](docs/quiz/questions/15.04.2026_questions.md).
 

@@ -2,6 +2,7 @@
 
 | Data | Wynik | % | Braki | Link |
 |------|-------|---|-------|------|
+| 27.04.2026 | 15/20 | 75% | 4, 6, 8, 16, 20 (X) | [wynik](27.04.2026_results.md) |
 | 26.04.2026 | 16/20 | 80% | 2, 10, 17, 19 (niedozwolona litera X) | [wynik](26.04.2026_results.md) |
 | 24.04.2026 | 15/20 | 75% | 5, 12, 15, 17 (X); pyt. 18: błędna litera | [wynik](24.04.2026_results.md) |
 | 21.04.2026 | 14/20 | 70% | 2, 7, 11, 12, 15, 17 (niedozwolona litera X) | [wynik](21.04.2026_results.md) |
@@ -13,21 +14,21 @@
 
 - **Najlepszy wynik:** 19/20 (95%) — 15.04.2026
 - **Najgorszy wynik:** 14/20 (70%) — 21.04.2026
-- **Średnia ze wszystkich prób:** 16,7/20 (83,33%)
-- **Ostatnie 5 wyników:** 16/20 (26.04.2026), 15/20 (24.04.2026), 14/20 (21.04.2026), 18/20 (20.04.2026), 18/20 (19.04.2026)
+- **Średnia ze wszystkich prób (7):** 16,43/20 (82,14%)
+- **Ostatnie 5 wyników:** 15/20 (27.04.2026), 16/20 (26.04.2026), 15/20 (24.04.2026), 14/20 (21.04.2026), 18/20 (20.04.2026)
 
 ## Najczęstsze obszary do poprawy
 
-Na podstawie wszystkich plików `*_results.md` (łącznie 6 prób), zliczanie tagów w sekcjach szczegółów błędów:
+Na podstawie wszystkich plików `*_results.md` (7 prób), zliczanie tagów w sekcjach szczegółów błędów (łącznie z serią 27.04.2026 — pięć braków, wszystkie [ML]):
 
-| Kategoria (tag) | Liczba wystąpień błędów |
-|-----------------|------------------------|
-| [ML] | 18 |
+| Kategoria (tag) | Zgrubna liczba wystąpień błędów |
+|-----------------|---------------------------------|
+| [ML] | 23+ (dominuje, w tym 5 w 27.04.2026) |
+| [scikit-learn] | 1 |
 | [Adaline] | 1 |
 | [NumPy] | 1 |
-| [scikit-learn] | 1 |
 
-Najmocniejsze wzorce: wpisy `X` zamiast A–D (nadal liczone jak brak), pomyłki na granicy **nadzór / nienadzór / RL** oraz niedoprecyzowana odpowiedź przy pytaniach o **stratę vs koszt** i o **krok SGD (średni koszt, iloczyn cech i błędu)**. Nowe błędy wniosły też pojedyncze punkty z [Adaline] (różnica batch vs SGD) i [NumPy] (stabilność numeryczna sigmoidy).
+Najmocniejsze wzorce: wpisy `X` zamiast A–D (nadal liczone jak brak), pomyłki na granicy **nadzór / nienadzór / RL**, niedoprecyzowanie przy **log-loss (dwa składniki, 0/1)**, mylenie **batch Adaline (SSE)** z innymi kosztami, rola **hiperparametrów** vs wag, interpretacja wykresu **kosztu przy y=0** w funkcji p, spójność **etykiet −1/1 z 0/1** i straty. W serii 27.04.2026 w kluczu skorygowano literę pyt. 18 (D zamiast błędnej A) — opis w `27.04.2026_results.md`.
 
 ## Notatki
 

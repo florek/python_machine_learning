@@ -1,8 +1,8 @@
-# Notatki z kursu ML (zakres do strony 89)
+# Notatki z kursu ML (zakres do strony 94)
 
 ## Co obejmuje ten zakres
 
-Zakres obejmuje fundamenty uczenia maszynowego: rodzaje uczenia, przygotowanie danych, perceptron, Adaline w wariancie batch i SGD, standaryzację cech, wizualizację granic decyzji oraz wejście w regresję logistyczną przez sigmoidę i funkcję kosztu log-loss.
+Zakres obejmuje fundamenty uczenia maszynowego: rodzaje uczenia, przygotowanie danych, perceptron, Adaline w wariancie batch i SGD, standaryzację cech, wizualizację granic decyzji oraz regresję logistyczną: sigmoida, log-loss, gradient prosty w wersji skryptowej, porównanie kosztów w zależności od etykiety, oraz wykorzystanie interfejsu scikit-learn do wczytania przykładowych danych i konstruowania zadania binarnego wśród wielu klas.
 
 ## Rodzaje uczenia maszynowego
 
@@ -20,11 +20,11 @@ Standardowy przepływ to: przygotowanie danych, podział na zbiory, trening, wal
 
 Wirtualne środowisko izoluje zależności i minimalizuje konflikty wersji. Lista zależności pozwala odtworzyć identyczny setup w innym miejscu. Jeśli IDE wskazuje inny interpreter niż terminal, pojawiają się fałszywe błędy importu mimo poprawnie zainstalowanych pakietów.
 
-## Dane Iris i przygotowanie pod zadania binarne
+## Dane Iris i reprezentacje etykiet
 
-Zbiór Iris ma 150 rekordów, cztery cechy numeryczne i etykietę gatunku. W klasycznym ćwiczeniu binarnym wykorzystuje się dwie klasy i dwie cechy, co umożliwia wizualizację 2D. Etykiety tekstowe mapuje się do wartości liczbowych, najczęściej -1 i 1 dla perceptronu i Adaline.
+Zbiór Iris ma 150 rekordów, cztery cechy numeryczne i etykietę gatunku. Cechy można wybierać po indeksach, np. dwie wybrane współrzędne do wizualizacji 2D albo długości działki kielicha i płatka. W wersji binarnej z pliku CSV etykiety tekstowe zwykle mapuje się do wartości -1 i 1 dla perceptronu i Adaline. W wersji wieloklasowej z gotowego API etykiety bywają kodowane 0, 1, 2; wówczas progowanie decyzji w regresji logistycznej (np. próg 0,5 na prawdopodobieństwie) dotyczy interpretacji 0/1, a wycinek tylko dwóch klas uzyskuje się przez odfiltrowanie wierszy należących do tych etykiet, bez zmiany samych etykiet, jeśli w zadaniu mają pozostać 0 i 1.
 
-W wersji wieloklasowej wygodnie jest pobrać cechy i etykiety bezpośrednio jako macierze NumPy, gdzie klasy mają kody 0, 1, 2.
+Wspólne dla obu reprezentacji: spójność między zakresem etykiet a postacią funkcji straty. Perceptron/Adaline w ćwiczeniu używają często -1 i 1, a logarytmiczna funkcja kosztu przy regresji logistycznej wygodnie współgra z 0 i 1, bo występują w niej współczynniki (1−y) oraz y mnożące składniki logarytmów.
 
 ## NumPy jako podstawa obliczeń
 
@@ -46,28 +46,36 @@ Tasowanie próbek przed epoką w SGD zmniejsza wpływ kolejności danych i popra
 
 Standaryzacja do średniej 0 i odchylenia 1 pomaga, gdy cechy mają różne skale. Dla metod opartych na gradiencie zwykle daje szybszą i stabilniejszą zbieżność oraz zmniejsza ryzyko rozbiegania kosztu przy większym kroku uczenia.
 
-## Wizualizacja modeli
-
-Wykres rozrzutu pozwala zobaczyć separowalność klas w przestrzeni cech. Wykres kosztu lub liczby błędów na epokę pokazuje przebieg uczenia. Regiony decyzji powstają przez predykcję na siatce punktów 2D i narysowanie mapy klas na tle danych.
-
 ## Sigmoida i pomost do regresji logistycznej
 
-Sigmoida mapuje dowolną wartość rzeczywistą do przedziału (0, 1), więc nadaje się do modelowania prawdopodobieństwa klasy. W okolicy zera jest najbardziej czuła, a na krańcach nasyca się blisko 0 lub 1.
+Sigmoida mapuje dowolną wartość rzeczywistą do przedziału (0, 1), więc nadaje się do modelowania prawdopodobieństwa klasy. W okolicy zera jest najbardziej czuła, a na krańcach nasyca się blisko 0 lub 1. Wykreślając koszt względem prawdopodobieństwa φ(z) dla etykiet 0 i 1, widać, że gdy właściwa klasa ma 1, kara rośnie, gdy model przypisuje niskie p; gdy właściwa to 0, kara rośnie przy wysokim p.
 
-W regresji logistycznej koszt dla poprawnej klasy 1 ma postać `-log(p)`, a dla klasy 0 `-log(1-p)`. Taka funkcja silnie karze błędne, pewne predykcje i jest lepiej dopasowana do klasyfikacji probabilistycznej niż SSE.
+W regresji logistycznej sumaryczny koszt dopasowuje do zbioru jako suma składników postaci −y log(φ) i −(1−y) log(1−φ) dla etykiet 0/1, co silnie penalizuje błędnie, „pewne” predykcje.
 
-## Implementacja regresji logistycznej z GD
+Ograniczanie argumentu wykładniczego w sigmoidzie, np. przez ucięcie do rozsądnego przedziału, zabezpiecza przed przepełnieniem w typowej postaci 1/(1+exp(−z)).
 
-W praktyce można trenować model iteracyjnie przez gradient po wszystkich próbkach i aktualizować wagi analogicznie do Adaline, ale z aktywacją sigmoidalną i kosztem log-loss. W obliczeniu sigmoidy warto ograniczać argument funkcji wykładniczej przez `clip`, żeby uniknąć przepełnień numerycznych.
+## Implementacja regresji logistycznej z pełnej próbki (batch GD)
 
-Próg decyzyjny 0.5 zamienia prawdopodobieństwo na etykietę klasy binarnej 0 lub 1.
+W wersji wsadowej gradient liczy się z całej macierzy próbek: błąd to różnica etykiet 0/1 a aktywacji sigmoidalnej, aktualizacja wag przypomina strukturę Adaline, lecz z nieliniową aktywacją i kosztem opartym o logi prawdopodobieństw. Dyskretną etykietę klasy uzyskuje się przez progowanie prawdopodobieństwa, typowo z progiem 0,5.
+
+Kod wizualizujący regiony decyzji oczekuje obiektu z metodą przewidującą etykiety klas na macierzy punktów siatki, niezależnie od wewnętrznej reprezentacji modelu, o ile publiczne API to zachowuje. To wzorzec „kaczej typizacji” w małym ćwiczeniu: ważne są kontrakty wejścia-wyjścia, nie ręczna weryfikacja typu w runtime.
+
+## Wczytywanie danych: plik lokalny a API
+
+Lokalny plik CSV wymaga jawnego czytania, nagłówków i ręcznego opisu etykiet. Funkcja zbiorcza zwracająca macierz cech i wektor etykiet skraca schemat, gdy zbiór jest wbudowany. Oba warianty można konsekwentnie łączyć z tymi samymi późniejszymi krokami, jeśli dopasuje się etykiety do wybranej funkcji kosztu i decyzji.
+
+## Wizualizacja modeli
+
+Wykres rozrzutu pozwala zobaczyć separowalność klas w przestrzeni cech. Wykres kosztu lub liczby błędów na epokę pokazuje przebieg uczenia. Regiony decyzji powstają przez predykcję na siatce punktów 2D i narysowanie mapy klas na tle danych. Opcjonalnie wyróżnia się testowy podzbiór punktami o innej obwódce, jeśli taki wariant jest w skrypcie.
 
 ## Najczęstsze pułapki
 
-Za duży współczynnik uczenia prowadzi do oscylacji i niestabilności kosztu. Brak standaryzacji utrudnia zbieżność w metodach gradientowych. Mieszanie środowisk Pythona powoduje fałszywe błędy importu.
+Za duży współczynnik uczenia prowadzi do oscylacji i niestabilności kosztu. Brak standaryzacji utrudnia zbieżność w metodach gradientowych, gdy cechy mają skale o rzędach wielkości. Mieszanie środowisk Pythona powoduje fałszywe błędy importu.
 
 Błędy sieciowe przy pobieraniu danych z internetu nie oznaczają błędu modelu, tylko problem z dostępnością źródła. Dlatego lokalna kopia danych jest praktyczna podczas nauki.
 
+Dwa różne schematy etykiet (-1/1 oraz 0/1) łatwo pomylić: koszt i próg decyzji muszą odpowiadać tej samej konwencji, co etykiety w danym ćwiczeniu. Oś wykresu należy opisać tym, co faktycznie przedstawia cecha (w tym, czy została ustandaryzowana, czy nie), żeby interpretacja wizualizacji była wiarygodna.
+
 ## Pytania kontrolne do utrwalenia
 
-Dlaczego standaryzacja cech często poprawia zachowanie metod gradientowych? Co zmienia przejście z progowej decyzji perceptronu do probabilistycznej interpretacji wyjścia przez sigmoidę? Kiedy metryka liczby błędnych aktualizacji wystarcza, a kiedy trzeba przejść na analizę kosztu i walidacji?
+Dlaczego standaryzacja cech często poprawia zachowanie metod gradientowych? Co zmienia przejście z progowej decyzji perceptronu do probabilistycznej interpretacji wyjścia przez sigmoidę? Kiedy wybór kosztu kwadratowego ma sens, a kiedy logarytmiczny, jeśli celem jest klasyfikacja probabilistyczna? Jak odróżnić etykietowanie 0/1 od -1/1 w pętli uczącej?
