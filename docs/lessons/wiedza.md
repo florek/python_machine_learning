@@ -1,8 +1,8 @@
-# Notatki z kursu ML (zakres do strony 94)
+# Notatki z kursu ML (zakres do strony 97)
 
 ## Co obejmuje ten zakres
 
-Zakres obejmuje fundamenty uczenia maszynowego: rodzaje uczenia, przygotowanie danych, perceptron, Adaline w wariancie batch i SGD, standaryzację cech, wizualizację granic decyzji oraz regresję logistyczną: sigmoida, log-loss, gradient prosty w wersji skryptowej, porównanie kosztów w zależności od etykiety, oraz wykorzystanie interfejsu scikit-learn do wczytania przykładowych danych i konstruowania zadania binarnego wśród wielu klas.
+Zakres obejmuje fundamenty uczenia maszynowego: rodzaje uczenia, przygotowanie danych, perceptron, Adaline w wariancie batch i SGD, standaryzację cech, wizualizację granic decyzji oraz regresję logistyczną: sigmoida, log-loss, gradient prosty w wersji skryptowej, porównanie kosztów w zależności od etykiety, wykorzystanie interfejsu scikit-learn do wczytania przykładowych danych, wybór podzbioru cech po indeksach kolumn, konstruowanie zadania binarnego wśród wielu klas z zachowaniem etykiet całkowitych 0 i 1, oraz stabilizację numeryczną aktywacji sigmoidalnej przy wsadowym uczeniu.
 
 ## Rodzaje uczenia maszynowego
 
@@ -64,6 +64,20 @@ Kod wizualizujący regiony decyzji oczekuje obiektu z metodą przewidującą ety
 
 Lokalny plik CSV wymaga jawnego czytania, nagłówków i ręcznego opisu etykiet. Funkcja zbiorcza zwracająca macierz cech i wektor etykiet skraca schemat, gdy zbiór jest wbudowany. Oba warianty można konsekwentnie łączyć z tymi samymi późniejszymi krokami, jeśli dopasuje się etykiety do wybranej funkcji kosztu i decyzji.
 
+Z API typowego zbioru Iris można pobrać pełną macierz cech i pełny wektor klas naraz, a następnie zawęzić przestrzeń cech do dwóch wybranych współrzędnych przez indeksowanie kolumn macierzy — np. dwóch ostatnich cech mierzalnych, co nadaje się do wykresu 2D przy trzech klasach w wektorze etykiet. To inny scenariusz niż wycinek pierwszych dwóch gatunków z parą cech o indeksach zero i dwa w czterech pomiarach: tam naturalna kolejność etykiet w zbiorze daje wartości 0 i 1 bez przekodowywania, o ile nie zmienia się konwencji etykiet przy filtrowaniu wierszy.
+
+## Log-loss a oś prawdopodobieństwa
+
+Wykresy kosztu w zależności od wartości aktywacji sigmoidalnej (interpretowanej jako prawdopodobieństwo klasy dodatniej) pokazują, że składniki logarytmiczne dla etykiety 1 i dla etykiety 0 rosną w różnych rejonach: „pewna” pomyłka przy rzeczywistej klasie 1 jest droga przy niskim prawdopodobieństwie, a przy rzeczywistej 0 — przy prawdopodobieństwie zbliżonym do 1. Oś odciętej jako φ(z) ułatwia porównanie kształtów obu krzywych kosztu w tej samej skali prawdopodobieństwa.
+
+## Standaryzacja na ćwiczeniowym podzbiorze
+
+Gdy średnią i odchylenie standardowe liczy się na tym samym podzbiorze wierszy, który potem jest używany do treningu (bez osobnego podziału trening/test w skrypcie), wynik jest spójny lokalnie, lecz w środowisku produkcyjnym parametry normalizacji należy zawsze estymować na treningu i aplikować do walidacji i testu, żeby uniknąć wycieku informacji ze zbioru ewaluacyjnego do skali cech.
+
+## Regresja logistyczna wsadowa we własnej implementacji
+
+Aktualizacja wag z całej macierzy próbek odbywa się analogicznie do idei batchowej Adaline, lecz błąd budowany jest z różnicy między etykietą 0/1 a wyjściem sigmoidalnym, a koszt epoki agreguje logarytmiczne składniki po próbkach. Decyzja dyskretna zwykle stosuje próg 0,5 na wyjściu aktywacji. Ucięcie argumentu przed obliczeniem wykladniczym w sigmoidzie (np. do ustalonego przedziału symetrycznego wokół zera) chroni przed wartościami wykladniczymi poza zakresem typu zmiennoprzecinkowego przy bardzo dużych |z|.
+
 ## Wizualizacja modeli
 
 Wykres rozrzutu pozwala zobaczyć separowalność klas w przestrzeni cech. Wykres kosztu lub liczby błędów na epokę pokazuje przebieg uczenia. Regiony decyzji powstają przez predykcję na siatce punktów 2D i narysowanie mapy klas na tle danych. Opcjonalnie wyróżnia się testowy podzbiór punktami o innej obwódce, jeśli taki wariant jest w skrypcie.
@@ -78,4 +92,4 @@ Dwa różne schematy etykiet (-1/1 oraz 0/1) łatwo pomylić: koszt i próg decy
 
 ## Pytania kontrolne do utrwalenia
 
-Dlaczego standaryzacja cech często poprawia zachowanie metod gradientowych? Co zmienia przejście z progowej decyzji perceptronu do probabilistycznej interpretacji wyjścia przez sigmoidę? Kiedy wybór kosztu kwadratowego ma sens, a kiedy logarytmiczny, jeśli celem jest klasyfikacja probabilistyczna? Jak odróżnić etykietowanie 0/1 od -1/1 w pętli uczącej?
+Dlaczego standaryzacja cech często poprawia zachowanie metod gradientowych? Co zmienia przejście z progowej decyzji perceptronu do probabilistycznej interpretacji wyjścia przez sigmoidę? Kiedy wybór kosztu kwadratowego ma sens, a kiedy logarytmiczny, jeśli celem jest klasyfikacja probabilistyczna? Jak odróżnić etykietowanie 0/1 od -1/1 w pętli uczącej? Czym różni się wybór dwóch kolumn z pełnej macierzy cech dla trzech klas od wycinka dwóch klas z określonymi wierszami i kolumnami? Po co ograniczać z przed obliczeniem sigmoidy w implementacji numerycznej?

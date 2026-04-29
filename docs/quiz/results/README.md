@@ -2,6 +2,7 @@
 
 | Data | Wynik | % | Braki | Link |
 |------|-------|---|-------|------|
+| 29.04.2026 | 6/20 | 30% | 5, 6, 16, 20 (X) | [wynik](29.04.2026_results.md) |
 | 27.04.2026 | 15/20 | 75% | 4, 6, 8, 16, 20 (X) | [wynik](27.04.2026_results.md) |
 | 26.04.2026 | 16/20 | 80% | 2, 10, 17, 19 (niedozwolona litera X) | [wynik](26.04.2026_results.md) |
 | 24.04.2026 | 15/20 | 75% | 5, 12, 15, 17 (X); pyt. 18: błędna litera | [wynik](24.04.2026_results.md) |
@@ -13,22 +14,22 @@
 ## Statystyki
 
 - **Najlepszy wynik:** 19/20 (95%) — 15.04.2026
-- **Najgorszy wynik:** 14/20 (70%) — 21.04.2026
-- **Średnia ze wszystkich prób (7):** 16,43/20 (82,14%)
-- **Ostatnie 5 wyników:** 15/20 (27.04.2026), 16/20 (26.04.2026), 15/20 (24.04.2026), 14/20 (21.04.2026), 18/20 (20.04.2026)
+- **Najgorszy wynik:** 6/20 (30%) — 29.04.2026
+- **Średnia ze wszystkich prób (8):** 15,125/20 (75,625%) — suma punktów 121, 121÷8=15,125
+- **Ostatnie 5 wyników:** 6/20 (29.04.2026), 15/20 (27.04.2026), 16/20 (26.04.2026), 15/20 (24.04.2026), 14/20 (21.04.2026)
 
 ## Najczęstsze obszary do poprawy
 
-Na podstawie wszystkich plików `*_results.md` (7 prób), zliczanie tagów w sekcjach szczegółów błędów (łącznie z serią 27.04.2026 — pięć braków, wszystkie [ML]):
+Na podstawie wszystkich plików `*_results.md` (8 prób), zliczanie tagów w szczegółach błędów:
 
 | Kategoria (tag) | Zgrubna liczba wystąpień błędów |
 |-----------------|---------------------------------|
-| [ML] | 23+ (dominuje, w tym 5 w 27.04.2026) |
-| [scikit-learn] | 1 |
-| [Adaline] | 1 |
-| [NumPy] | 1 |
+| [ML] | dominuje (w tym seria 29.04.2026: wiele pomyłek na paradygmatach uczenia, pipeline skalowania, perceptron/Adaline/logistyczna, kontrakt `predict`) |
+| [SciKit-learn] | kilka (m.in. wybór kolumn vs klasy w Iris) |
+| [NumPy] | kilka (m.in. stabilizacja sigmoidy) |
+| [Matplotlib] | kilka (interpretacja wykresu kosztu vs φ(z)) |
 
-Najmocniejsze wzorce: wpisy `X` zamiast A–D (nadal liczone jak brak), pomyłki na granicy **nadzór / nienadzór / RL**, niedoprecyzowanie przy **log-loss (dwa składniki, 0/1)**, mylenie **batch Adaline (SSE)** z innymi kosztami, rola **hiperparametrów** vs wag, interpretacja wykresu **kosztu przy y=0** w funkcji p, spójność **etykiet −1/1 z 0/1** i straty. W serii 27.04.2026 w kluczu skorygowano literę pyt. 18 (D zamiast błędnej A) — opis w `27.04.2026_results.md`.
+Najmocniejsze wzorce: wpisy **X** zamiast A–D (liczone jak brak), mylenie **wyboru kolumn** z **filtrowaniem klas**, **RL** z nadzorem, **skalowanie test vs train**, **próg na aktywacji** vs inne reguły decyzji, rola **`partial_fit`**. Seria **29.04.2026** obniżyła średnią — warto powtórzyć sekcje notatek o Iris (API vs CSV), kosztach i procedurze preprocessingu.
 
 ## Notatki
 
